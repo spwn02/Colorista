@@ -8,8 +8,8 @@ int main()
 {
   Core::ApplicationSpecification appSpec;
   appSpec.name = "Colorista";
-  appSpec.windowSpec.width = 1000;
-  appSpec.windowSpec.height = 1000;
+  appSpec.windowSpec.width = 1920;
+  appSpec.windowSpec.height = 1080;
 
   Core::Application app(appSpec);
   app.pushLayer<AppLayer>();

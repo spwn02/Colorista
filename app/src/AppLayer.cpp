@@ -7,7 +7,7 @@ AppLayer::AppLayer()
   : Layer("App")
 {
   // Create shaders
-  m_shader = Renderer::createGraphicsShader("../../../../app/shaders/vertex.shader", "../../../../app/shaders/fragment.shader");
+  m_shader = Renderer::createGraphicsShader("../../../../app/shaders/vertex.shader", "../../../../app/shaders/fractals.shader");
 
   // Create geometry
   glCreateVertexArrays(1, &m_vertexArray);
