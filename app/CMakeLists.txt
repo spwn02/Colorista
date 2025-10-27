@@ -3,13 +3,19 @@ file(GLOB_RECURSE HDRS "*.h")
 
 add_executable(${PROJECT_NAME} ${SRCS} ${HDRS})
 
-add_compile_definitions(
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/app")
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
   GLFW_INCLUDE_NONE
+  IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+  IMGUI_IMPL_OPENGL_LOADER_GLAD
   _CRT_SECURE_NO_WARNINGS
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Core)
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  WORKING_DIRECTORY             "${CMAKE_SOURCE_DIR}/app"
+  DEBUGGER_WORKING_DIRECTORY    "${CMAKE_SOURCE_DIR}/app"
+  VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/app"
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Core)

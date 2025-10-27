@@ -1,16 +1,10 @@
-#include "Application.h"
+#include "Corepch.h"
 
-#include <GLFW/glfw3.h>
-#include "Log.h"
+#include "Application.h"
 
 namespace Core {
 
   Application* Application::s_instance = nullptr;
-
-  static void GLFWErrorCallback(int error, const char* description)
-  {
-    Log::Assert(false, "GLFW error({0}): {1}", error, description);
-  }
 
   Application::Application(const ApplicationSpecification& specification)
     : m_specification(specification)
@@ -18,15 +12,13 @@ namespace Core {
     s_instance = this;
 
     Log::Log::init();
-
-    glfwSetErrorCallback(GLFWErrorCallback);
-    glfwInit();
+    Renderer::RendererAPI::setAPI(m_specification.graphicsAPI);
 
     // Set window title to app name if empty
     if (m_specification.windowSpec.title.empty())
       m_specification.windowSpec.title = m_specification.name;
 
-    m_window = std::make_shared<Window>(m_specification.windowSpec);
+    m_window.reset(Window::create(m_specification.windowSpec));
     m_window->start();
   }
 
@@ -34,7 +26,7 @@ namespace Core {
   {
     m_window->shutdown();
 
-    glfwTerminate();
+    Renderer::RendererAPI::destroyAPI();
 
     s_instance = nullptr;
   }
@@ -48,7 +40,7 @@ namespace Core {
     // Main Application loop
     while (m_running)
     {
-      glfwPollEvents();
+      m_window->pollEvents();
 
       if (m_window->shouldClose())
       {
@@ -60,13 +52,19 @@ namespace Core {
       float timestep = glm::clamp(currentTime - lastTime, 0.001f, 0.1f);
       lastTime = currentTime;
 
-      // Main layer update here
+      // Updates
       for (const std::unique_ptr<Layer>& layer : m_layerStack)
         layer->onUpdate(timestep);
 
-      // NOTE: rendering can be done elsewhere (eg. render thread)
+      for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
+        overlay->onUpdate(timestep);
+
+      // Renders
       for (const std::unique_ptr<Layer>& layer : m_layerStack)
         layer->onRender();
+
+      for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
+        overlay->onRender();
 
       m_window->update();
     }
@@ -90,7 +88,23 @@ namespace Core {
 
   float Application::getTime()
   {
-    return (float)glfwGetTime();
+    return Application::get().getWindow().getTime();
+  }
+
+  void Application::onEvent(Events::Event& event)
+  {
+    for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
+    {
+      overlay->onEvent(event);
+      if (event.handled) break;
+    }
+
+    if (!event.handled)
+      for (const std::unique_ptr<Layer>& layer : m_layerStack)
+      {
+        layer->onEvent(event);
+        if (event.handled) break;
+      }
   }
 
 }

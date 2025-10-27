@@ -9,6 +9,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SRCS} ${HDRS})
 add_compile_definitions(
   "GLFW_INCLUDE_NONE"
   "CORE_DEBUG"
+  "PLATFORM_WINDOWS"
 )
+
+target_precompile_headers(Core PUBLIC "Corepch.h")
 
 target_include_directories(Core PUBLIC "." "src")

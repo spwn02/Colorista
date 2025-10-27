@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "events/Event.h"
 
 #include <string>
 
@@ -15,7 +15,7 @@ namespace Core {
 
     virtual void onAttach() {}
     virtual void onDetach() {}
-    virtual void onEvent(Event& event) {}
+    virtual void onEvent(Events::Event& event) {}
 
     virtual void onUpdate(float ts) {}
     virtual void onRender() {}

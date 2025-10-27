@@ -1,9 +1,6 @@
 #include "ImGuiLayer.h"
 
 #include <imgui.h>
-
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.cpp>
@@ -57,7 +54,7 @@ void ImGuiLayer::onDetach()
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::onEvent(Core::Event& event)
+void ImGuiLayer::onEvent(Events::Event& event)
 {
 
 }

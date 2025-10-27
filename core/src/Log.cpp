@@ -1,3 +1,5 @@
+#include "Corepch.h"
+
 #include "Log.h"
 
 namespace Log {

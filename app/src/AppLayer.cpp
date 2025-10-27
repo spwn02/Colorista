@@ -6,45 +6,34 @@
 AppLayer::AppLayer()
   : Layer("App")
 {
+  // Setup renderer
+  m_renderer.reset(Renderer::Renderer::create());
+
   // Create shaders
-  m_shader = Renderer::createGraphicsShader("../../../../app/shaders/vertex.shader", "../../../../app/shaders/fractals.shader");
+  m_shader.reset(Renderer::GraphicsShader::create("shaders/vertex.shader", "shaders/fractals.shader"));
 
   // Create geometry
-  glCreateVertexArrays(1, &m_vertexArray);
-  glCreateBuffers(1, &m_vertexBuffer);
-
-  struct Vertex
-  {
-    glm::vec2 position;
+  Renderer::BufferLayout layout = {
+    { Renderer::DataType::Float2, "a_Position" }
   };
 
-  Vertex vertices[] = {
-    { {-1.0f, -1.0f } },  // Bottom-left
-    { { 3.0f, -1.0f } },  // Bottom-right
-    { {-1.0f,  3.0f } }   // Top-left
+  float vertices[] = {
+    -1.0f, -1.0f,  // Bottom-left
+     3.0f, -1.0f,  // Bottom-right
+    -1.0f,  3.0f   // Top-left
   };
 
-  glNamedBufferData(m_vertexBuffer, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  m_vertexArray.reset(Renderer::VertexArray::create());
+  m_vertexBuffer.reset(Renderer::VertexBuffer::create(vertices, sizeof(vertices)));
 
-  // Bind the VBO to VAO at binding index 0
-  glVertexArrayVertexBuffer(m_vertexArray, 0, m_vertexBuffer, 0, sizeof(Vertex));
+  m_vertexBuffer->setLayout(layout);
 
-  // Enable attributes
-  glEnableVertexArrayAttrib(m_vertexArray, 0); // position
-  
-  // Format: location, size, type, normalized, relative offset
-  glVertexArrayAttribFormat(m_vertexArray, 0, 2, GL_FLOAT, GL_FALSE, static_cast<GLuint>(offsetof(Vertex, position)));
-
-  // Link attribute locations to binding index 0
-  glVertexArrayAttribBinding(m_vertexArray, 0, 0);
+  m_vertexArray->addVertexBuffer(m_vertexBuffer, m_shader->getHandle());
 }
 
 AppLayer::~AppLayer()
 {
-  glDeleteVertexArrays(1, &m_vertexArray);
-  glDeleteBuffers(1, &m_vertexBuffer);
 
-  glDeleteProgram(m_shader);
 }
 
 
@@ -58,7 +47,7 @@ void AppLayer::onDetach()
 
 }
 
-void AppLayer::onEvent(Core::Event& event)
+void AppLayer::onEvent(Events::Event& event)
 {
   Log::Info("AppLayer: received event!");
 }
@@ -70,21 +59,20 @@ void AppLayer::onUpdate(float ts)
 
 void AppLayer::onRender()
 {
-  glClearColor(0.1f, 0.1f, 0.1f, 1);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  m_renderer->clearColor(0.1f, 0.1f, 0.1f, 1);
+  m_renderer->clear();
 
-  glUseProgram(m_shader);
+  m_shader->bind();
 
   // Uniforms
-  glUniform1f(0, Core::Application::getTime());
+  m_shader->setUniform1f("iTime", Core::Application::getTime());
 
   glm::vec2 framebufferSize = Core::Application::get().getFramebufferSize();
-  glUniform2f(1, framebufferSize.x, framebufferSize.y);
+  m_shader->setUniform2f("iResolution", framebufferSize.x, framebufferSize.y);
 
-  glViewport(0, 0, static_cast<GLsizei>(framebufferSize.x), static_cast<GLsizei>(framebufferSize.y));
+  m_renderer->setViewport(0, 0, framebufferSize.x, framebufferSize.y);
 
   // Render
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glBindVertexArray(m_vertexArray);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  m_renderer->bindFramebuffer(0);
+  m_renderer->drawCount(m_vertexArray, m_shader, 0, 3);
 }

@@ -1,188 +1,70 @@
+#include "Corepch.h"
+
 #include "Shader.h"
+#include "renderer/RendererAPI.h"
 
-#include <filesystem>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
-#include <glad/glad.h>
-
-#include "Log.h"
+#include "platform/OpenGL/OpenGLShader.h"
 
 namespace Renderer {
 
-  static std::string readTextFile(const std::filesystem::path& path)
+  ComputeShader* ComputeShader::create(const std::filesystem::path& path)
   {
-    std::ifstream file(path);
-
-    Log::Assert(file.is_open(), "Failed to open file: {0}", path.string());
-
-    std::ostringstream contentStream;
-    contentStream << file.rdbuf();
-    return contentStream.str();
+    switch (RendererAPI::getAPI())
+    {
+    case OpenGL:
+      return new OpenGLComputeShader(path);
+    default:
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+      return nullptr;
+    }
   }
 
-  uint32_t createComputeShader(const std::filesystem::path& path)
+  GraphicsShader* GraphicsShader::create(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
   {
-    std::string shaderSource = readTextFile(path);
-
-    GLuint shaderHandle = glCreateShader(GL_COMPUTE_SHADER);
-
-    const GLchar* source = (const GLchar*)shaderSource.c_str();
-    glShaderSource(shaderHandle, 1, &source, 0);
-
-    glCompileShader(shaderHandle);
-
-    GLint isCompiled = 0;
-    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE)
+    switch (RendererAPI::getAPI())
     {
-      GLint maxLength = 0;
-      glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetShaderInfoLog(shaderHandle, maxLength, &maxLength, &infoLog[0]);
-
-      Log::Error(infoLog.data());
-
-      glDeleteShader(shaderHandle);
-      return -1;
+    case OpenGL:
+      return new OpenGLGraphicsShader(vertexPath, fragmentPath);
+    default:
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+      return nullptr;
     }
-
-    GLuint program = glCreateProgram();
-    glAttachShader(program, shaderHandle);
-    glLinkProgram(program);
-
-    GLint isLinked = 0;
-    glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
-    if (isLinked == GL_FALSE)
-    {
-      GLint maxLength = 0;
-      glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-
-      Log::Error(infoLog.data());
-
-      glDeleteProgram(program);
-      glDeleteShader(shaderHandle);
-
-      return -1;
-    }
-
-    glDetachShader(program, shaderHandle);
-    return program;
   }
 
-  uint32_t reloadComputeShader(uint32_t shaderHandle, const std::filesystem::path& path)
+  int32_t Shader::getUniformLocation(const std::string& name) const
   {
-    uint32_t newShaderHandle = createComputeShader(path);
-
-    // Return old shader if compilation failed
-    if (newShaderHandle == -1)
-      return shaderHandle;
-
-    glDeleteProgram(shaderHandle);
-    return newShaderHandle;
+    switch (RendererAPI::getAPI())
+    {
+    case OpenGL:
+      return OpenGLUniformLocation(m_handle, name);
+    default:
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+      return 0;
+    }
   }
 
-  uint32_t createGraphicsShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
+  void Shader::setUniform1f(const std::string& name, float x) const
   {
-    std::string vertexShaderSource = readTextFile(vertexPath);
-    std::string fragmentShaderSource = readTextFile(fragmentPath);
-
-    // Vertex shader
-
-    GLuint vertexShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-
-    const GLchar* source = (const GLchar*)vertexShaderSource.c_str();
-    glShaderSource(vertexShaderHandle, 1, &source, 0);
-
-    glCompileShader(vertexShaderHandle);
-
-    GLint isCompiled = 0;
-    glGetShaderiv(vertexShaderHandle, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE)
+    switch (RendererAPI::getAPI())
     {
-      GLint maxLength = 0;
-      glGetShaderiv(vertexShaderHandle, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetShaderInfoLog(vertexShaderHandle, maxLength, &maxLength, &infoLog[0]);
-
-      Log::Error(infoLog.data());
-
-      glDeleteShader(vertexShaderHandle);
-      return -1;
+    case OpenGL:
+      OpenGLUniform1f(getUniformLocation(name), x);
+      break;
+    default:
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
     }
-
-    // Fragment shader
-
-    GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-
-    source = (const GLchar*)fragmentShaderSource.c_str();
-    glShaderSource(fragmentShaderHandle, 1, &source, 0);
-
-    glCompileShader(fragmentShaderHandle);
-
-    isCompiled = 0;
-    glGetShaderiv(fragmentShaderHandle, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE)
-    {
-      GLint maxLength = 0;
-      glGetShaderiv(fragmentShaderHandle, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetShaderInfoLog(fragmentShaderHandle, maxLength, &maxLength, &infoLog[0]);
-
-      Log::Error(infoLog.data());
-
-      glDeleteShader(fragmentShaderHandle);
-      return -1;
-    }
-
-    // Program linking
-
-    GLuint program = glCreateProgram();
-    glAttachShader(program, vertexShaderHandle);
-    glAttachShader(program, fragmentShaderHandle);
-    glLinkProgram(program);
-
-    GLint isLinked = 0;
-    glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
-    if (isLinked == GL_FALSE)
-    {
-      GLint maxLength = 0;
-      glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
-      std::vector<GLchar> infoLog(maxLength);
-      glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-
-      Log::Error(infoLog.data());
-
-      glDeleteProgram(program);
-      glDeleteShader(vertexShaderHandle);
-      glDeleteShader(fragmentShaderHandle);
-
-      return -1;
-    }
-
-    glDetachShader(program, vertexShaderHandle);
-    glDetachShader(program, fragmentShaderHandle);
-    return program;
   }
 
-  uint32_t reloadGraphicsShader(uint32_t shaderHandle, const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
+  void Shader::setUniform2f(const std::string& name, float x, float y) const
   {
-    uint32_t newShaderHandle = createGraphicsShader(vertexPath, fragmentPath);
-
-    // Return old shader if compilation failed
-    if (newShaderHandle == -1)
-      return shaderHandle;
-
-    glDeleteProgram(shaderHandle);
-    return newShaderHandle;
+    switch (RendererAPI::getAPI())
+    {
+    case OpenGL:
+      OpenGLUniform2f(getUniformLocation(name), x, y);
+      break;
+    default:
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+    }
   }
 
 }

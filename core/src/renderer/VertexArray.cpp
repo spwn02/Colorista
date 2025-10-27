@@ -1,18 +1,18 @@
 #include "Corepch.h"
 
-#include "Renderer.h"
-#include "RendererAPI.h"
+#include "VertexArray.h"
+#include "renderer/RendererAPI.h"
 
-#include "platform/OpenGL/OpenGLRenderer.h"
+#include "platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Renderer {
 
-  Renderer* Renderer::create()
+  VertexArray* VertexArray::create()
   {
     switch (RendererAPI::getAPI())
     {
     case OpenGL:
-      return new OpenGLRenderer();
+      return new OpenGLVertexArray();
     default:
       Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;

@@ -10,12 +10,13 @@ public:
 
   void onAttach() override;
   void onDetach() override;
-  void onEvent(Core::Event& event) override;
+  void onEvent(Events::Event& event) override;
 
   void onUpdate(float ts) override;
   void onRender() override;
 private:
-  uint32_t m_shader = 0;
-  uint32_t m_vertexArray = 0;
-  uint32_t m_vertexBuffer = 0;
+  std::shared_ptr<Renderer::GraphicsShader> m_shader;
+  std::shared_ptr<Renderer::VertexArray> m_vertexArray;
+  std::shared_ptr<Renderer::VertexBuffer> m_vertexBuffer;
+  std::shared_ptr<Renderer::Renderer> m_renderer;
 };

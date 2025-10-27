@@ -10,7 +10,7 @@ public:
 
   void onAttach() override;
   void onDetach() override;
-  void onEvent(Core::Event& event) override;
+  void onEvent(Events::Event& event) override;
 
   virtual void onUpdate(float ts) override;
   virtual void onRender() override;

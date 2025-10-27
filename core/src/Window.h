@@ -17,23 +17,21 @@ namespace Core {
   class Window
   {
   public:
-    Window(const WindowSpecification& specification = WindowSpecification());
-    ~Window();
+    virtual ~Window() = default;
 
-    void start();
-    void shutdown();
+    virtual void start() = 0;
+    virtual void shutdown() = 0;
 
-    void update();
+    virtual void update() = 0;
+    virtual void pollEvents() = 0;
 
-    glm::vec2 getFramebufferSize();
+    virtual bool shouldClose() const = 0;
 
-    bool shouldClose() const;
+    virtual glm::vec2 getFramebufferSize() = 0;
+    virtual void* getHandle() const = 0;
+    virtual float getTime() const = 0;
 
-    void* getHandle() const { return m_handle; }
-  private:
-    WindowSpecification m_specification;
-
-    void* m_handle = nullptr;
+    static Window* create(const WindowSpecification& specification = WindowSpecification());
   };
 
 }
