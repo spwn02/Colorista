@@ -45,7 +45,7 @@ namespace Renderer {
     return 0;
   }
 
-  void OpenGLVertexArray::addVertexBuffer(std::shared_ptr<VertexBuffer>& buffer, uint32_t program)
+  void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer, const std::shared_ptr<Shader>& shader)
   {
     Log::Assert(buffer->getLayout().getElements().size(), "Vertex buffer has no layout!");
 
@@ -57,7 +57,7 @@ namespace Renderer {
 
     for (const auto& elem : layout)
     {
-      location = glGetAttribLocation(program, elem.name.c_str());
+      location = glGetAttribLocation(shader->getHandle(), elem.name.c_str());
 
       glEnableVertexAttribArray(location);
       glVertexAttribPointer(

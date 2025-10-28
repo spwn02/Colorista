@@ -21,13 +21,15 @@ namespace Renderer {
 
   void OpenGLRenderer::setViewport(int32_t x, int32_t y, int32_t width, int32_t height) const
   {
-    glViewport(0, 0, static_cast<size_t>(width), static_cast<size_t>(height));
+    glViewport(0, 0, static_cast<int>(width), static_cast<int>(height));
   }
 
   void OpenGLRenderer::drawIndexed(
     const std::shared_ptr<VertexArray>& vertexArray,
     const std::shared_ptr<Shader>& shader) const
   {
+    Log::Assert(vertexArray->getIndexBuffer() != nullptr, "IndexBuffer has not been initialized!");
+
     shader->bind();
     vertexArray->bind();
     shader->unbind();

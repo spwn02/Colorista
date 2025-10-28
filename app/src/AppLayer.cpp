@@ -28,7 +28,7 @@ AppLayer::AppLayer()
 
   m_vertexBuffer->setLayout(layout);
 
-  m_vertexArray->addVertexBuffer(m_vertexBuffer, m_shader->getHandle());
+  m_vertexArray->addVertexBuffer(m_vertexBuffer, m_shader);
 }
 
 AppLayer::~AppLayer()
