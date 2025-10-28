@@ -19,7 +19,7 @@ namespace Events {
   {
     int32_t scanCode, mods, repeatCount;
 
-    explicit KeyPressedEvent(int32_t keyCode, int32_t scanCode, in32_t mods, in32_t repeatCount)
+    explicit KeyPressedEvent(int32_t keyCode, int32_t scanCode, int32_t mods, int32_t repeatCount)
       : KeyEvent(keyCode), scanCode(scanCode), mods(mods), repeatCount(repeatCount) {
     };
 

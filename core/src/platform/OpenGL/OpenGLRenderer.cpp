@@ -19,9 +19,9 @@ namespace Renderer {
     glClearColor(r, g, b, a);
   }
 
-  void OpenGLRenderer::setViewport(int32_t x, int32_t y, int32_t width, int32_t height) const
+  void OpenGLRenderer::setViewport(int32_t x, int32_t y, float width, float height) const
   {
-    glViewport(0, 0, static_cast<int>(width), static_cast<int>(height));
+    glViewport(0, 0, static_cast<int32_t>(width), static_cast<int32_t>(height));
   }
 
   void OpenGLRenderer::drawIndexed(

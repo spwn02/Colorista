@@ -49,7 +49,8 @@ void AppLayer::onDetach()
 
 void AppLayer::onEvent(Events::Event& event)
 {
-  Log::Info("AppLayer: received event!");
+  Log::Trace("AppLayer: received event!");
+  event.handled = true;
 }
 
 void AppLayer::onUpdate(float ts)

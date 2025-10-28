@@ -10,7 +10,7 @@ namespace Core {
     std::string title;
     uint32_t width = 1280;
     uint32_t height = 720;
-    bool resizeable = true;
+    bool resizable = true;
     bool VSync = true;
   };
 
@@ -30,6 +30,9 @@ namespace Core {
     virtual glm::vec2 getFramebufferSize() = 0;
     virtual void* getHandle() const = 0;
     virtual float getTime() const = 0;
+
+    virtual void setVSync(bool VSync) const = 0;
+    virtual void setResizable(bool resizable) const = 0;
 
     static Window* create(const WindowSpecification& specification = WindowSpecification());
   };

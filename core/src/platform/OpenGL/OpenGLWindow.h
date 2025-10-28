@@ -23,6 +23,9 @@ namespace Core {
     glm::vec2 getFramebufferSize() override;
     void* getHandle() const override { return m_handle; };
     float getTime() const override { return static_cast<float>(glfwGetTime()); }
+
+    void setVSync(bool VSync) const override { glfwSwapInterval(VSync); };
+    void setResizable(bool resizable) const override { glfwWindowHint(GLFW_RESIZABLE, resizable); };
   private:
     WindowSpecification m_specification;
 
