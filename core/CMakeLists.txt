@@ -12,6 +12,6 @@ add_compile_definitions(
   "PLATFORM_WINDOWS"
 )
 
-target_precompile_headers(Core PUBLIC "Corepch.h")
+#target_precompile_headers(Core PUBLIC "Corepch.h")
 
 target_include_directories(Core PUBLIC "." "src")

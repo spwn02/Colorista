@@ -14,7 +14,6 @@ namespace Renderer {
     case OpenGL:
       return new OpenGLVertexArray();
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }

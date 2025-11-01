@@ -16,7 +16,6 @@ namespace Core {
     case Renderer::OpenGL:
       return new OpenGLWindow(specification);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }

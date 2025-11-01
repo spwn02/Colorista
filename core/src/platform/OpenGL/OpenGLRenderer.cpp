@@ -32,10 +32,10 @@ namespace Renderer {
 
     shader->bind();
     vertexArray->bind();
-    shader->unbind();
 
     glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
 
+    shader->unbind();
     vertexArray->unbind();
   }
 

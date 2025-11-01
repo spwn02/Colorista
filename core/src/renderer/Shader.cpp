@@ -14,7 +14,6 @@ namespace Renderer {
     case OpenGL:
       return new OpenGLComputeShader(path);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }
@@ -26,7 +25,6 @@ namespace Renderer {
     case OpenGL:
       return new OpenGLGraphicsShader(vertexPath, fragmentPath);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }
@@ -38,7 +36,6 @@ namespace Renderer {
     case OpenGL:
       return OpenGLUniformLocation(m_handle, name);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return 0;
     }
   }
@@ -51,7 +48,7 @@ namespace Renderer {
       OpenGLUniform1f(getUniformLocation(name), x);
       break;
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+      break;
     }
   }
 
@@ -63,7 +60,7 @@ namespace Renderer {
       OpenGLUniform2f(getUniformLocation(name), x, y);
       break;
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
+      break;
     }
   }
 

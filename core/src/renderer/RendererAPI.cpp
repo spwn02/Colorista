@@ -42,7 +42,7 @@ namespace Renderer {
       OpenGLSetup::shutdown();
       break;
     default:
-      Log::Assert(false, "Unknown GraphicsAPI!", static_cast<int8_t>(s_API));
+      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", static_cast<int8_t>(s_API));
       break;
     }
 

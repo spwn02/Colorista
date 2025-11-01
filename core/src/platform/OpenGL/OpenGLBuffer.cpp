@@ -7,8 +7,13 @@ namespace Renderer {
   OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
   {
     glCreateBuffers(1, &m_rendererID);
-    glNamedBufferData(m_rendererID, size, vertices, GL_STATIC_DRAW);
     bind();
+    sendData(vertices, size);
+  }
+
+  void OpenGLVertexBuffer::sendData(float* vertices, uint32_t size) const
+  {
+    glNamedBufferData(m_rendererID, size, vertices, GL_STATIC_DRAW);
   }
 
   OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -31,7 +36,7 @@ namespace Renderer {
   {
     glGenBuffers(1, &m_rendererID);
     bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+    set(indices, size);
   }
 
   OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -47,6 +52,13 @@ namespace Renderer {
   void OpenGLIndexBuffer::unbind() const
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+
+  void OpenGLIndexBuffer::set(uint32_t* indices, uint32_t size) const
+  {
+    m_count = size / sizeof(uint32_t);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+    glNamedBufferData(m_rendererID, size, indices, GL_STATIC_DRAW);
   }
 
 }

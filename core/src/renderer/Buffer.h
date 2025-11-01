@@ -120,6 +120,8 @@ namespace Renderer {
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
+    virtual void sendData(float* vertices, uint32_t size) const = 0;
+
     virtual inline const BufferLayout& getLayout() const = 0;
     virtual inline void setLayout(BufferLayout layout) = 0;
 
@@ -135,6 +137,8 @@ namespace Renderer {
     virtual void bind() const = 0;
     virtual void unbind() const = 0;
 
+    virtual void set(uint32_t* indices, uint32_t size) const = 0;
+    
     virtual inline uint32_t getCount() const = 0;
 
     static IndexBuffer* create(const std::initializer_list<uint32_t>& indices);

@@ -19,7 +19,6 @@ namespace Renderer {
     case GraphicsAPI::OpenGL:
       return new OpenGLVertexBuffer(vertices, size);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }
@@ -36,7 +35,6 @@ namespace Renderer {
     case GraphicsAPI::OpenGL:
       return new OpenGLIndexBuffer(indices, size);
     default:
-      Log::Assert(false, "GraphicsAPI({0}) is currently not supported!", RendererAPI::getAPI());
       return nullptr;
     }
   }
