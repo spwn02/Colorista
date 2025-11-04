@@ -21,42 +21,39 @@ namespace Renderer {
 
   void OpenGLRenderer::setViewport(int32_t x, int32_t y, float width, float height) const
   {
-    glViewport(0, 0, static_cast<int32_t>(width), static_cast<int32_t>(height));
+    glViewport(0, 0, (int32_t)width, (int32_t)height);
   }
 
   void OpenGLRenderer::drawIndexed(
-    const std::shared_ptr<VertexArray>& vertexArray,
     const std::shared_ptr<Shader>& shader) const
   {
-    Log::Assert(vertexArray->getIndexBuffer() != nullptr, "IndexBuffer has not been initialized!");
+    Log::Assert(m_vertexArray->getIndexBuffer() != nullptr, "IndexBuffer has not been initialized!");
 
+    m_frameBuffer->bind();
     shader->bind();
-    vertexArray->bind();
+    m_vertexArray->bind();
 
-    glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, m_vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
 
+    m_frameBuffer->unbind();
     shader->unbind();
-    vertexArray->unbind();
+    m_vertexArray->unbind();
   }
 
   void OpenGLRenderer::drawCount(
-    const std::shared_ptr<VertexArray>& vertexArray,
     const std::shared_ptr<Shader>& shader,
     uint32_t first,
     uint32_t count) const
   {
+    m_frameBuffer->bind();
     shader->bind();
-    vertexArray->bind();
+    m_vertexArray->bind();
 
     glDrawArrays(GL_TRIANGLES, first, count);
 
     shader->unbind();
-    vertexArray->unbind();
-  }
-
-  void OpenGLRenderer::bindFramebuffer(uint32_t frameBuffer) const
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+    m_vertexArray->unbind();
+    m_frameBuffer->unbind();
   }
 
 }

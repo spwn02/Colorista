@@ -12,15 +12,11 @@ namespace Renderer {
     void clearColor(float r, float g, float b, float a) const override;
     void setViewport(int32_t x, int32_t y, float width, float height) const override;
 
-    void drawIndexed(
-      const std::shared_ptr<VertexArray>& vertexArray,
-      const std::shared_ptr<Shader>& shader) const override;
+    void drawIndexed(const std::shared_ptr<Shader>& shader) const override;
     void drawCount(
-      const std::shared_ptr<VertexArray>& vertexArray,
       const std::shared_ptr<Shader>& shader,
       uint32_t first,
       uint32_t count) const override;
-    void bindFramebuffer(uint32_t frameBuffer) const override;
   };
 
 }

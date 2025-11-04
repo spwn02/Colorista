@@ -16,7 +16,7 @@ add_library(glad "glad/src/glad.c")
 target_include_directories(glad PUBLIC "glad/include")
 
 # ImGui
-set(PHDR "imgui/imgui.h")
+set(PHDR "imgui/imgui.h" "imgui/imgui_internal.h")
 set(HDRS "imgui/imstb_rectpack.h" "imgui/imstb_textedit" "imgui/imstb_truetype.h")
 
 add_library(imgui

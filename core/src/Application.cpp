@@ -24,6 +24,10 @@ namespace Core {
 
   Application::~Application()
   {
+    for (const std::unique_ptr<Layer>& layer : m_layerStack)
+      layer->onDetach();
+    m_layerStack.clear();
+
     m_window->shutdown();
 
     Renderer::RendererAPI::destroyAPI();
@@ -56,15 +60,9 @@ namespace Core {
       for (const std::unique_ptr<Layer>& layer : m_layerStack)
         layer->onUpdate(timestep);
 
-      for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
-        overlay->onUpdate(timestep);
-
       // Renders
       for (const std::unique_ptr<Layer>& layer : m_layerStack)
         layer->onRender();
-
-      for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
-        overlay->onRender();
 
       m_window->update();
     }
@@ -93,18 +91,11 @@ namespace Core {
 
   void Application::onEvent(Events::Event& event)
   {
-    for (const std::unique_ptr<Layer>& overlay : m_overlayStack)
+    for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
     {
-      overlay->onEvent(event);
+      (*it)->onEvent(event);
       if (event.handled) break;
     }
-
-    if (!event.handled)
-      for (const std::unique_ptr<Layer>& layer : m_layerStack)
-      {
-        layer->onEvent(event);
-        if (event.handled) break;
-      }
   }
 
 }

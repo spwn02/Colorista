@@ -20,12 +20,11 @@ DemoLayer::DemoLayer()
     -1.0f,  3.0f   // Top-left
   };
 
-  m_vertexArray.reset(Renderer::VertexArray::create());
   m_vertexBuffer.reset(Renderer::VertexBuffer::create(vertices, sizeof(vertices)));
 
   m_vertexBuffer->setLayout(layout);
 
-  m_vertexArray->addVertexBuffer(m_vertexBuffer, m_shader);
+  m_renderer->getVertexArray()->addVertexBuffer(m_vertexBuffer, m_shader);
 }
 
 DemoLayer::~DemoLayer()
@@ -71,6 +70,5 @@ void DemoLayer::onRender()
   m_renderer->setViewport(0, 0, framebufferSize.x, framebufferSize.y);
 
   // Render
-  m_renderer->bindFramebuffer(0);
-  m_renderer->drawCount(m_vertexArray, m_shader, 0, 3);
+  m_renderer->drawCount(m_shader, 0, 3);
 }

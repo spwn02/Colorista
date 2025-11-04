@@ -28,26 +28,24 @@ namespace Core {
     void start();
     void shutdown();
 
-    template<typename TLayer>
+    template<typename TLayer, typename... Args>
       requires(std::is_base_of_v<Layer, TLayer>)
-    void pushLayer()
+    void pushLayer(Args&&... args)
     {
-      std::unique_ptr<TLayer> layer = std::make_unique<TLayer>();
-
+      std::unique_ptr<TLayer> layer = std::make_unique<TLayer>(std::forward<Args>(args)...);
       layer->onAttach();
 
-      m_layerStack.push_back(std::move(layer));
+      m_layerStack.insert(m_layerStack.begin(), std::move(layer));
     }
 
-    template<typename TLayer>
+    template<typename TLayer, typename... Args>
       requires(std::is_base_of_v<Layer, TLayer>)
-    void pushOverlay()
+    void pushOverlay(Args&&... args)
     {
-      std::unique_ptr<TLayer> overlay = std::make_unique<TLayer>();
-
+      std::unique_ptr<TLayer> overlay = std::make_unique<TLayer>(std::forward<Args>(args)...);
       overlay->onAttach();
 
-      m_overlayStack.push_back(std::move(overlay));
+      m_layerStack.push_back(std::move(overlay));
     }
 
     glm::vec2 getFramebufferSize() const;
@@ -63,7 +61,6 @@ namespace Core {
     bool m_running = false;
 
     std::vector<std::unique_ptr<Layer>> m_layerStack;
-    std::vector<std::unique_ptr<Layer>> m_overlayStack;
   };
 
 }

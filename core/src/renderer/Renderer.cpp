@@ -7,6 +7,12 @@
 
 namespace Renderer {
 
+  Renderer::Renderer()
+  {
+    m_vertexArray.reset(VertexArray::create());
+    m_frameBuffer.reset(FrameBuffer::create());
+  }
+
   Renderer* Renderer::create()
   {
     switch (RendererAPI::getAPI())
