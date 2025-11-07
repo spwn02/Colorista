@@ -2,7 +2,7 @@
 
 #include "Shader.h"
 #include "VertexArray.h"
-#include "Framebuffer.h"
+#include "FrameBuffer.h"
 
 namespace Renderer {
 

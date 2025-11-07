@@ -8,4 +8,3 @@
 #include "events/ApplicationEvents.h"
 #include "events/MouseEvents.h"
 #include "events/KeyEvents.h"
-#include "Assert.h"

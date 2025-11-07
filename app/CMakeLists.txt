@@ -19,6 +19,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/app"
 )
 
-#target_precompile_headers(${PROJECT_NAME} PRIVATE "imguipch.h")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "imguipch.h")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Core)
