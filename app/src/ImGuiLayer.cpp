@@ -2,9 +2,6 @@
 
 #include "ImGuiLayer.h"
 
-#include <backends/imgui_impl_opengl3.cpp>
-#include <backends/imgui_impl_glfw.cpp>
-
 ImGuiLayer::ImGuiLayer(EditorState& state)
   : Layer("ImGui"), m_state(state)
 {

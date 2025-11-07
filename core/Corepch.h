@@ -18,8 +18,10 @@
 #include "Log.h"
 
 #include <glad/glad.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
-#ifdef PLATFORM_WINDOWS
+#include "Base.h"
+
+#ifdef CORE_PLATFORM_WINDOWS
   #include <Windows.h>
 #endif

@@ -11,6 +11,6 @@ target_compile_definitions(Core PUBLIC
   "CORE_DEBUG"
 )
 
-#target_precompile_headers(Core PUBLIC "Corepch.h")
+target_precompile_headers(Core PUBLIC "Corepch.h")
 
 target_include_directories(Core PUBLIC "." "src")
