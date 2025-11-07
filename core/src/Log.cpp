@@ -2,20 +2,26 @@
 
 #include "Log.h"
 
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
 namespace Log {
 
   std::shared_ptr<spdlog::logger> Log::s_logger = nullptr;
-  bool Log::s_running = false;
-
   void Log::init()
   {
-    if (s_running) return;
+    std::vector<spdlog::sink_ptr> logSinks;
+    logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+    logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/Core.log", true));
 
-    spdlog::set_pattern("%^[%T] %n: %v%$");
-    s_logger = spdlog::stdout_color_mt("Core");
+    logSinks[0]->set_pattern("%^[%T] %n: %v%$");
+    logSinks[1]->set_pattern("[%T] [%l] %n: %v");
+
+    s_logger = std::make_shared<spdlog::logger>("CORE", logSinks.begin(), logSinks.end());
+    spdlog::register_logger(s_logger);
     s_logger->set_level(spdlog::level::trace);
+    s_logger->flush_on(spdlog::level::trace);
 
-    s_running = true;
   }
 
 }
