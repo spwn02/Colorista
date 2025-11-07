@@ -1,5 +1,13 @@
 #pragma once
 
+#ifdef _WIN32
+  #define CORE_PLATFORM_WINDOWS
+#endif
+
+#ifdef linux
+  #define CORE_PLATFORM_LINUX
+#endif
+
 #ifdef CORE_DEBUG
   #ifdef CORE_PLATFORM_WINDOWS
     #define CORE_DEBUGBREAK() __debugbreak()
