@@ -18,7 +18,7 @@ namespace Renderer {
     Float = 0, Float2, Float3, Float4,
     Mat3, Mat4,
     Int, Int2, Int3, Int4,
-    Bool
+    Boolean
   };
 
   static uint32_t dataTypeSize(DataType type)
@@ -35,7 +35,7 @@ namespace Renderer {
     case DataType::Int2:    return 4 * 2;
     case DataType::Int3:    return 4 * 3;
     case DataType::Int4:    return 4 * 4;
-    case DataType::Bool:    return 1;
+    case DataType::Boolean:    return 1;
     }
 
     Log::Assert(false, "Unknown DataType passed to dataTypeSize()!");
@@ -68,7 +68,7 @@ namespace Renderer {
       case DataType::Int2:    return 2;
       case DataType::Int3:    return 3;
       case DataType::Int4:    return 4;
-      case DataType::Bool:    return 1;
+      case DataType::Boolean:    return 1;
       }
 
       Log::Assert(false, "Unknown DataType in getComponentCount()!");

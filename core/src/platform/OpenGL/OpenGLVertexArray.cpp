@@ -38,7 +38,7 @@ namespace Renderer {
     case DataType::Int2:    return GL_INT;
     case DataType::Int3:    return GL_INT;
     case DataType::Int4:    return GL_INT;
-    case DataType::Bool:    return GL_BOOL;
+    case DataType::Boolean:    return GL_BOOL;
     }
 
     Log::Assert(false, "Unknown DataType!");

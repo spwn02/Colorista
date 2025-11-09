@@ -4,10 +4,9 @@
 
 namespace Events {
 
-  enum EventType : int8_t
+  enum EventType : uint8_t
   {
-    None = 0,
-    WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+    Null = 0, WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
     AppTick, AppUpdate, AppRender,
     KeyPressed, KeyReleased, KeyTyped,
     MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
@@ -26,7 +25,8 @@ namespace Events {
     virtual const std::string toString() const { return getName(); }
   };
 
-#define EVENT_CLASS_TYPE(t) virtual EventType getType() const override { return EventType::##t; }\
-                             virtual const char* getName() const override { return #t; }
+#define EVENT_CLASS_TYPE(t) static Events::EventType getStaticType() { return Events::EventType::t; }\
+                            virtual Events::EventType getType() const override { return getStaticType(); }\
+                            virtual const char* getName() const override { return #t; }
 
 }

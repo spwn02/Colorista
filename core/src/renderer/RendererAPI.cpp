@@ -6,7 +6,7 @@
 
 namespace Renderer {
 
-  GraphicsAPI RendererAPI::s_API = None;
+  GraphicsAPI RendererAPI::s_API = Null;
 
   void RendererAPI::setAPI(GraphicsAPI API)
   {
@@ -16,7 +16,7 @@ namespace Renderer {
 
     switch (API)
     {
-    case None:
+    case Null:
       Log::Assert(false, "Use RendererAPI::destroyAPI() instead of RendererAPI::setAPI(None)!");
       break;
     case OpenGL:
@@ -27,7 +27,7 @@ namespace Renderer {
       return;
     }
 
-    if (oldAPI != None) destroyAPI();
+    if (oldAPI != Null) destroyAPI();
     s_API = API;
   }
 
@@ -35,7 +35,7 @@ namespace Renderer {
   {
     switch (s_API)
     {
-    case None:
+    case Null:
       Log::Assert(false, "GraphicsAPI is not set yet!");
       break;
     case OpenGL:
@@ -46,7 +46,7 @@ namespace Renderer {
       break;
     }
 
-    s_API = None;
+    s_API = Null;
   }
 
 }

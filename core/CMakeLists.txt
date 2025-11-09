@@ -7,10 +7,11 @@ add_library(Core STATIC ${SRCS} ${HDRS})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SRCS} ${HDRS})
 
 target_compile_definitions(Core PUBLIC
-  "GLFW_INCLUDE_NONE"
-  "CORE_DEBUG"
+  CORE_DEBUG
+  _CRT_SECURE_NO_WARNINGS
+  NOMINMAX
 )
 
 target_precompile_headers(Core PUBLIC "Corepch.h")
 
-target_include_directories(Core PUBLIC "." "src")
+target_include_directories(Core PUBLIC "${CMAKE_SOURCE_DIR}/core" "src")

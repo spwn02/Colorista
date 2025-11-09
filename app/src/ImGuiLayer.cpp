@@ -1,4 +1,4 @@
-#include "imguipch.h"
+#include "../imguipch.h"
 
 #include "ImGuiLayer.h"
 
@@ -90,19 +90,6 @@ void ImGuiLayer::end()
     GLFWwindow* backup_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
 
-    /*ImGuiPlatformIO& pio = ImGui::GetPlatformIO();
-    for (ImGuiViewport* vp : pio.Viewports)
-    {
-      GLFWwindow* wnd = (GLFWwindow*)vp->PlatformHandle;
-      glfwMakeContextCurrent(wnd);
-
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glViewport(0, 0, (int)vp->Size.x, (int)vp->Size.y);
-
-      glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }*/
-
     ImGui::RenderPlatformWindowsDefault();
     glfwMakeContextCurrent(backup_current_context);
   }
@@ -165,8 +152,9 @@ void ImGuiLayer::viewport()
 
   // CROP to panel rect (no scaling)
   ImGui::PushClipRect(content_min, content_max, true);
+
   ImGui::GetWindowDrawList()->AddImage(
-    (void*)m_state.texture->getTextureID(),
+    reinterpret_cast<void*>(static_cast<intptr_t>(m_state.texture->getTextureID())),
     origin,
     ImVec2(origin.x + canvas_ui.x, origin.y + canvas_ui.y),
     ImVec2(0, 1), ImVec2(1, 0) // keep full texture, no UV scale
@@ -232,43 +220,6 @@ void ImGuiLayer::menuBar()
 void ImGuiLayer::toolsPanel()
 {
   ImGui::Begin("Tools");
-
-  /*ImGuiViewport* vp = ImGui::GetWindowViewport();
-  float scale = vp ? vp->DpiScale : 1.0f;
-  glm::vec2 texSize(m_state.brushIcons.size / scale, m_state.brushIcons.size / scale);
-
-  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1.0f, 1.0f));
-
-  ImVec2 size(32.0f, 32.0f);
-  ImVec2 uv0(0.0f, 1.0f);
-  ImVec2 uv1(1.0f, 0.0f);
-  ImVec4 bgCol(0.2f, 0.2f, 0.2f, 1.0f);
-  ImVec4 tintCol(m_state.brushColor.r, m_state.brushColor.g, m_state.brushColor.b, m_state.brushColor.a);
-  if (ImGui::ImageButton("Square", m_state.brushIcons.square->getTextureID(), size, uv0, uv1, bgCol, tintCol))
-  {
-    m_state.brushType = BrushType::Square;
-  }
-  ImGui::SameLine();
-
-  if (ImGui::ImageButton("Triangle", m_state.brushIcons.triangle->getTextureID(), size, uv0, uv1, bgCol, tintCol))
-  {
-    m_state.brushType = BrushType::Triangle;
-  }
-  ImGui::SameLine();
-
-  if (ImGui::ImageButton("TriangleC", m_state.brushIcons.triangle->getTextureID(), size, uv0, uv1, bgCol, tintCol))
-  {
-    m_state.brushType = BrushType::TriangleC;
-  }
-  ImGui::SameLine();
-
-  if (ImGui::ImageButton("Circle", m_state.brushIcons.circle->getTextureID(), size, uv0, uv1, bgCol, tintCol))
-  {
-    m_state.brushType = BrushType::Circle;
-  }
-  ImGui::SameLine();
-
-  ImGui::PopStyleVar();*/
 
   const float size = 32.0f / (ImGui::GetWindowViewport()->DpiScale);
   ImU32 tint = IM_COL32(

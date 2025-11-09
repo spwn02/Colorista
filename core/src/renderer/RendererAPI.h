@@ -6,7 +6,7 @@ namespace Renderer {
 
   enum GraphicsAPI : int8_t
   {
-    None = 0, OpenGL, Vulcan
+    Null = 0, OpenGL, Vulkan
   };
 
   class RendererAPI
