@@ -12,10 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Projects
-add_subdirectory(Core)
+add_subdirectory(core)
 add_subdirectory(app)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 # Dependencies
+target_link_libraries(${PROJECT_NAME} PUBLIC Core)
 add_subdirectory(vendor)

@@ -23,4 +23,6 @@ target_compile_definitions(imgui PUBLIC
   IMGUI_IMPL_OPENGL_LOADER_GLAD
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE imgui)
+target_link_libraries(imgui PUBLIC glfw)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC imgui)
